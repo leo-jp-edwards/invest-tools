@@ -2,6 +2,7 @@ import random
 
 from invest_tools.dummy import test
 
+
 def get_dummy() -> dict:
     """
     GET dummy
