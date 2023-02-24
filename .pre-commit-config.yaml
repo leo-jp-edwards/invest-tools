@@ -1,0 +1,29 @@
+exclude: ''
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: poetry run black .
+        language: system
+        types: [python]
+        stages: [commit]        
+      - id: isort
+        name: isort
+        entry: poetry run isort . --profile black
+        language: system
+        types: [python]
+        stages: [commit]
+      - id: flake8
+        name: flake8
+        entry: poetry run flake8 .
+        language: system
+        types: [python]
+        stages: [commit]
+      - id: bandit
+        name: bandit
+        entry: poetry run bandit .
+        language: system
+        always_run: true
+        types: [python]
+        stages: [commit]
