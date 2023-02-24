@@ -19,9 +19,11 @@ def test_portfolio_calculate_returns(prices, currency):
     """
     port = Portfolio()
     prices_df = port.get_prices(prices)
-    test_code = 'TEST'
+    test_code = "TEST"
     port.get_usd_converter(currency)
-    returns = port.calculate_returns(prices_df, test_code, convert=True, cur=port.gbpusd)
+    returns = port.calculate_returns(
+        prices_df, test_code, convert=True, cur=port.gbpusd
+    )
     assert len(returns) > 0
 
 
@@ -54,10 +56,7 @@ def test_portfolio_build(currency, prices):
     THEN a backtest attribute is created and calculated
     """
     portfolio_definition = {
-        "TEST": {
-            "weight": 1,
-            "currency": "usd"
-        },
+        "TEST": {"weight": 1, "currency": "usd"},
     }
     port = Portfolio()
     port.get_usd_converter(currency)
