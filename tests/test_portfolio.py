@@ -1,5 +1,6 @@
 from invest_tools.portfolio import Portfolio
 
+
 def test_portfolio_ping():
     """
     GIVEN
