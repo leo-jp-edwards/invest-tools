@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "invest-tools"
-version = "0.2.0"
+version = "0.2.2"
 description = "Tools to manage portfolio risk analysis"
 authors = ["leo <leojpedwards@gmail.com>"]
 readme = "README.md"
@@ -8,7 +8,7 @@ packages = [{include = "invest_tools"}]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.12"
+python = ">=3.10,<3.12"
 pandas = "^1.5.3"
 numpy = "^1.24.2"
 matplotlib = "^3.7.0"
