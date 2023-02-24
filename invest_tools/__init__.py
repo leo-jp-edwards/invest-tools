@@ -1,8 +1,6 @@
 """
-Random Dummy Generator
-
-Get random dummy from database of dummies
+Investment Tools for Portfolio Analysis
 """
-from .get_dummy import get_dummy
+from .portfolio import Portfolio
 
-__all__ = ["get_dummy"]
+__all__ = ["Portfolio"]
