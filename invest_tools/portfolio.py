@@ -11,7 +11,7 @@ class Currency(Enum):
 
 class InvalidCurrencyException(Exception):
     def __init__(self, message):
-        super().__init__(message)
+        super().__init__("Currency must be `gbp` or `usd`")
 
 
 class Portfolio:
@@ -62,9 +62,7 @@ class Portfolio:
                     )
                 else:
                     # TODO add a test for this!
-                    raise InvalidCurrencyException(
-                        "Currency must be `gbp` or `usd`"
-                    )
+                    raise InvalidCurrencyException
             else:
                 ret = self.calculate_returns(
                     self.prices, code, convert=False, cur=self.gbpusd
