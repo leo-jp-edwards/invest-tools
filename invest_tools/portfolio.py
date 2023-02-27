@@ -13,6 +13,7 @@ class InvalidCurrencyException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
+
 class Portfolio:
     def __init__(self, currency: Currency):
         self.make_up = {}
@@ -26,8 +27,7 @@ class Portfolio:
         return "pong"
 
     def build(
-        self,
-        portfolio_definition: typing.Dict[str, typing.Dict[str, str]]
+        self, portfolio_definition: typing.Dict[str, typing.Dict[str, str]]
     ) -> pd.DataFrame:
         """
         Use the portfolio make up definition to build the portfolio
