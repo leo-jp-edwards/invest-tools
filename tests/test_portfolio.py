@@ -1,4 +1,4 @@
-from invest_tools.portfolio import Portfolio
+from invest_tools.portfolio import Currency, Portfolio
 
 
 def test_portfolio_ping():
@@ -7,7 +7,8 @@ def test_portfolio_ping():
     WHEN Portfolio.ping is called
     THEN ping is returned
     """
-    ping = Portfolio().ping()
+    cur = Currency.GBP
+    ping = Portfolio(cur).ping()
     assert ping == "pong"
 
 
@@ -17,7 +18,8 @@ def test_portfolio_calculate_returns(prices, currency):
     WHEN portfolio.calculate_returns is called
     THEN a DataFrame is returned
     """
-    port = Portfolio()
+    cur = Currency.GBP
+    port = Portfolio(cur)
     prices_df = port.get_prices(prices)
     test_code = "TEST"
     port.get_usd_converter(currency)
@@ -33,7 +35,8 @@ def test_portfolio_get_usd_converter(currency):
     WHEN portfolio.get_usd_converter is called
     THEN a class attribute is defined
     """
-    port = Portfolio()
+    cur = Currency.GBP
+    port = Portfolio(cur)
     port.get_usd_converter(currency)
     assert len(port.gbpusd) > 0
 
@@ -44,7 +47,8 @@ def test_portfolio_get_prices(prices):
     WHEN portfolio.get_prices is called
     THEN a class attribute is defined
     """
-    port = Portfolio()
+    cur = Currency.GBP
+    port = Portfolio(cur)
     port.get_prices(prices)
     assert len(port.prices) > 0
 
@@ -58,7 +62,8 @@ def test_portfolio_build(currency, prices):
     portfolio_definition = {
         "TEST": {"weight": 1, "currency": "usd"},
     }
-    port = Portfolio()
+    cur = Currency.GBP
+    port = Portfolio(cur)
     port.get_usd_converter(currency)
     port.get_prices(prices)
     port.build(portfolio_definition)
