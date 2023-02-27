@@ -10,20 +10,20 @@ class Currency(Enum):
 
 
 class Portfolio:
-    def __init__(self):
+    def __init__(self, currency: Currency):
         self.make_up = {}
         self.backtest = pd.DataFrame()
         self.prices = pd.DataFrame()
         self.gbpusd = pd.DataFrame()
         self.usdgbp = pd.DataFrame()
+        self.currency = currency
 
     def ping(self):
         return "pong"
 
     def build(
         self,
-        portfolio_definition: typing.Dict[str, typing.Dict[str, str]],
-        currency: Currency
+        portfolio_definition: typing.Dict[str, typing.Dict[str, str]]
     ) -> pd.DataFrame:
         """
         Use the portfolio make up definition to build the portfolio
@@ -47,7 +47,7 @@ class Portfolio:
         weights = []
         for code, opts in portfolio_definition.items():
             weights.append(opts["weight"])
-            if opts["currency"] != currency:
+            if opts["currency"] != self.currency:
                 if opts["currency"] != Currency.GBP:
                     ret = self.calculate_returns(
                         self.prices, code, convert=True, cur=self.gbpusd
