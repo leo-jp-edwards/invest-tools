@@ -9,6 +9,10 @@ class Currency(Enum):
     GBP = "gbp"
 
 
+class InvalidCurrencyException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 class Portfolio:
     def __init__(self, currency: Currency):
         self.make_up = {}
@@ -56,6 +60,9 @@ class Portfolio:
                     ret = self.calculate_returns(
                         self.prices, code, convert=True, cur=self.usdgbp
                     )
+                else:
+                    # TODO add a test for this!
+                    raise InvalidCurrencyException("Currency must be `gbp` or `usd`")
             else:
                 ret = self.calculate_returns(
                     self.prices, code, convert=False, cur=self.gbpusd
