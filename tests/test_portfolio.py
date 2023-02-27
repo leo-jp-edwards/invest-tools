@@ -8,7 +8,7 @@ def test_portfolio_ping():
     THEN ping is returned
     """
     ping = Portfolio().ping()
-    assert ping == "ping"
+    assert ping == "pong"
 
 
 def test_portfolio_calculate_returns(prices, currency):

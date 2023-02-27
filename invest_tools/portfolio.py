@@ -1,6 +1,12 @@
 import typing
+from enum import Enum
 
 import pandas as pd
+
+
+class Currency(Enum):
+    USD = "usd"
+    GBP = "gbp"
 
 
 class Portfolio:
@@ -9,12 +15,15 @@ class Portfolio:
         self.backtest = pd.DataFrame()
         self.prices = pd.DataFrame()
         self.gbpusd = pd.DataFrame()
+        self.usdgbp = pd.DataFrame()
 
     def ping(self):
-        return "ping"
+        return "pong"
 
     def build(
-        self, portfolio_definition: typing.Dict[str, typing.Dict[str, str]]
+        self,
+        portfolio_definition: typing.Dict[str, typing.Dict[str, str]],
+        currency: Currency
     ) -> pd.DataFrame:
         """
         Use the portfolio make up definition to build the portfolio
@@ -38,10 +47,15 @@ class Portfolio:
         weights = []
         for code, opts in portfolio_definition.items():
             weights.append(opts["weight"])
-            if opts["currency"] != "gpb":
-                ret = self.calculate_returns(
-                    self.prices, code, convert=True, cur=self.gbpusd
-                )
+            if opts["currency"] != currency:
+                if opts["currency"] != Currency.GBP:
+                    ret = self.calculate_returns(
+                        self.prices, code, convert=True, cur=self.gbpusd
+                    )
+                elif opts["currency"] != Currency.USD:
+                    ret = self.calculate_returns(
+                        self.prices, code, convert=True, cur=self.usdgbp
+                    )
             else:
                 ret = self.calculate_returns(
                     self.prices, code, convert=False, cur=self.gbpusd
