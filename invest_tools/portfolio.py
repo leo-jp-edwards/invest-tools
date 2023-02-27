@@ -62,7 +62,9 @@ class Portfolio:
                     )
                 else:
                     # TODO add a test for this!
-                    raise InvalidCurrencyException("Currency must be `gbp` or `usd`")
+                    raise InvalidCurrencyException(
+                        "Currency must be `gbp` or `usd`"
+                    )
             else:
                 ret = self.calculate_returns(
                     self.prices, code, convert=False, cur=self.gbpusd
