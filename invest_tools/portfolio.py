@@ -15,20 +15,23 @@ class InvalidCurrencyException(Exception):
 
 
 class Portfolio:
-    def __init__(self, currency: Currency):
-        self.make_up = {}
+    def __init__(
+        self,
+        portfolio_definition: typing.Dict[str, typing.Dict[str, str]],
+        currency: Currency,
+    ):
+        self.portfolio_definition = portfolio_definition
         self.backtest = pd.DataFrame()
         self.prices = pd.DataFrame()
         self.gbpusd = pd.DataFrame()
         self.usdgbp = pd.DataFrame()
         self.currency = currency
+        self.clean_returns = pd.Series()
 
     def ping(self):
         return "pong"
 
-    def build(
-        self, portfolio_definition: typing.Dict[str, typing.Dict[str, str]]
-    ) -> pd.DataFrame:
+    def build(self) -> pd.DataFrame:
         """
         Use the portfolio make up definition to build the portfolio
 
@@ -49,7 +52,7 @@ class Portfolio:
         """
         dfs = []
         weights = []
-        for code, opts in portfolio_definition.items():
+        for code, opts in self.portfolio_definition.items():
             weights.append(opts["weight"])
             if opts["currency"] != self.currency:
                 if opts["currency"] != Currency.GBP:

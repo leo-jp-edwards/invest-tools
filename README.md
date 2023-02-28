@@ -65,16 +65,22 @@ portfolio_definition = {
     }
 }
 
-port = portfolio.Portfolio(portfolio.Currency.GBP)
+port = portfolio.Portfolio(portfolio_definition, portfolio.Currency.GBP)
 port.get_usd_converter("path/to/csv")
 port.get_prices("path/to/csv")
-port.build(portfolio_definition)
+port.build()
 print(np.mean(port.backtest.portfolio_returns))
 ```
 
 ## Roadmap
 
+- Add an input validator
 - Add deeper analysis methods
+    - Coppock Curve
+    - Fama French
+    - Excess Returns
+    - Maximum Drawdown
+    - Calculate Moments
 - Add further testing
 - Make the package more generic
 

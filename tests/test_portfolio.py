@@ -63,8 +63,8 @@ def test_portfolio_build(currency, prices):
         "TEST": {"weight": 1, "currency": "usd"},
     }
     cur = Currency.GBP
-    port = Portfolio(cur)
+    port = Portfolio(portfolio_definition, cur)
     port.get_usd_converter(currency)
     port.get_prices(prices)
-    port.build(portfolio_definition)
+    port.build()
     assert len(port.backtest) > 0
