@@ -74,15 +74,16 @@ print(np.mean(port.backtest.portfolio_returns))
 
 ## Roadmap
 
-- Add an input validator
-- Add deeper analysis methods
-    - Coppock Curve
-    - Fama French
-    - Excess Returns
-    - Maximum Drawdown
-    - Calculate Moments
-- Add further testing
-- Make the package more generic
+- [] Add an input validator
+- [] Add logging
+- [] Add deeper analysis methods
+    - [] Coppock Curve
+    - [] Fama French
+    - [] Excess Returns
+    - [] Maximum Drawdown
+    - [] Calculate Moments
+- [] Add further testing
+- [] Make the package more generic
 
 ## License
 

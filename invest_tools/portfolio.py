@@ -15,11 +15,42 @@ class InvalidCurrencyException(Exception):
 
 
 class Portfolio:
+    """
+    An investment portfolio is a collection of securities with weights and
+    currencies. Using historical prices these portfolios can be analysed for
+    historical performance and benchmarked by different values.
+
+    Analysis can be done using a variety of techniques.
+
+    The main function of building the portfolio is to standardise the portfolio
+    to a single currency using a conversion rate (the Close price of the
+    relevant currency on the day of the returns).
+    """
+
     def __init__(
         self,
         portfolio_definition: typing.Dict[str, typing.Dict[str, str]],
         currency: Currency,
     ):
+        """
+        The portfolio definition must be a python dictionary with the form of:
+
+        ```
+            {
+                "code": {
+                    "weight": Float,
+                    "currency": "gbp" | "usd"
+                },
+                ...
+            }
+        ```
+
+        The sum of the weights must be 1.
+
+        The currency is defined in the `Currency` enum.
+
+        Other values are simply empty initialised for future use.
+        """
         self.portfolio_definition = portfolio_definition
         self.backtest = pd.DataFrame()
         self.prices = pd.DataFrame()
@@ -33,19 +64,7 @@ class Portfolio:
 
     def build(self) -> pd.DataFrame:
         """
-        Use the portfolio make up definition to build the portfolio
-
-        The portfolio definition must be a python dictionary with the form of:
-
-        ```
-            {
-                "code": {
-                    "weight": Int,
-                    "currency": "gbp" | "usd"
-                },
-                ...
-            }
-        ```
+        Use the portfolio definition to build the portfolio
 
         :returns: Pandas dataframe of the portfolio returns
         :rtype: pd.DataFrame
@@ -76,6 +95,7 @@ class Portfolio:
         port_ret = port.mul(weights, axis=1).sum(axis=1)
         port["portfolio_returns"] = port_ret
         self.backtest = port
+        self.clean_returns = port_ret.dropna()
         return port
 
     def _get_data(self) -> typing.List[pd.DataFrame]:
