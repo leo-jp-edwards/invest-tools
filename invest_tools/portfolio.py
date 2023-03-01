@@ -2,7 +2,29 @@ import typing
 
 import pandas as pd
 
-from invest_tools import analysis, currency, log, validation
+from invest_tools import analysis, currency, validation
+from invest_tools.log import logger
+
+PRICES_DATATYPES = {
+    "TIDM": "string",
+    "Date": "string",
+    "Open": float,
+    "High": float,
+    "Low": float,
+    "Close": float,
+    "Volume": float,
+    "Adjustment": float,
+}
+
+CURRENCY_DATATYPES = {
+    "Date": "string",
+    "Open": float,
+    "High": float,
+    "Low": float,
+    "Close": float,
+    "Adj Close": float,
+    "Volume": float,
+}
 
 
 class Portfolio:
@@ -42,6 +64,8 @@ class Portfolio:
 
         Other values are simply empty initialised for future use.
         """
+        validation.validate_portfolio_definition(portfolio_definition)
+        logger.info("validated portfolio definition")
         self.portfolio_definition = portfolio_definition
         self.backtest = pd.DataFrame()
         self.prices = pd.DataFrame()
@@ -53,7 +77,7 @@ class Portfolio:
         self.analysis = {}
 
     def ping(self):
-        log.logger.info("PING")
+        logger.info("PING")
         return "pong"
 
     def build(self) -> pd.DataFrame:
@@ -76,9 +100,6 @@ class Portfolio:
                     ret = self.calculate_returns(
                         self.prices, code, convert=True, cur=self.usdgbp
                     )
-                else:
-                    # TODO add a test for this!
-                    raise currency.InvalidCurrencyException
             else:
                 ret = self.calculate_returns(
                     self.prices, code, convert=False, cur=self.gbpusd
@@ -90,6 +111,7 @@ class Portfolio:
         port["portfolio_returns"] = port_ret
         self.backtest = port
         self.clean_returns = port_ret.dropna()
+        logger.info("Portfolio built")
         return port
 
     def get_prices(self, prices_csv: str) -> pd.DataFrame:
@@ -106,7 +128,11 @@ class Portfolio:
         :returns: Pandas dataframe of the portfolio prices
         :rtype: pd.DataFrame
         """
+        logger.info(f"Loading data from {prices_csv}")
         df = pd.read_csv(prices_csv)
+        valid = validation.validate_columns(df, PRICES_DATATYPES.keys())
+        valid = validation.validate_datatypes(df, PRICES_DATATYPES)
+        logger.debug(f"passed validation: {valid}")
         df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
         self.prices = df
         return df
@@ -125,8 +151,11 @@ class Portfolio:
         :returns: Pandas dataframe of currency prices.
         :rtype: pd.DataFrame
         """
-
+        logger.info(f"Loading data from {conversion_csv}")
         cur = pd.read_csv(conversion_csv)
+        valid = validation.validate_columns(cur, CURRENCY_DATATYPES.keys())
+        valid = validation.validate_datatypes(cur, CURRENCY_DATATYPES)
+        logger.debug(f"passed validation: {valid}")
         cur["Date"] = pd.to_datetime(cur["Date"])
         cur = cur.set_index("Date")
         cur = cur.rename({"Close": "Convert"}, axis=1)
@@ -165,6 +194,7 @@ class Portfolio:
         ti["Close"] = ti.Close * ti.Adjustment
         ti["Returns"] = ti.Close.pct_change()
         ti["Returns"] = ti["Returns"].dropna()
+        logger.info(f"Calculation for {code} finished")
         return ti
 
     def analyse(self) -> typing.Dict[str, float]:
@@ -188,4 +218,5 @@ class Portfolio:
         self.analysis = analysis_results
         self.percentage_returns = percentage_returns
 
+        logger.info("Analysis loaded")
         return analysis_results

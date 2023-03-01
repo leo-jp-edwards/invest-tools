@@ -74,8 +74,8 @@ print(np.mean(port.backtest.portfolio_returns))
 
 ## Roadmap
 
-- [ ] Add an input validator
-- [ ] Add logging
+- [x] Add an input validator
+- [x] Add logging
 - [ ] Add deeper analysis methods
     - [ ] Coppock Curve
     - [ ] Fama French

@@ -1,8 +1,10 @@
+import math
 import typing
 
+import numpy as np
 import pandas as pd
 
-from invest_tools.currency import Currency
+from invest_tools.currency import Currency, InvalidCurrencyException
 
 
 class InvalidDataFrame(Exception):
@@ -16,10 +18,10 @@ class InvalidPortfolioDefinition(Exception):
 
 
 def validate_columns(df: pd.DataFrame, columns: typing.List[str]) -> bool:
-    if list(df.columns) != columns:
+    if set(df.columns) != set(columns):
         diff = []
-        for col in df.columns:
-            if col not in columns:
+        for col in set(df.columns):
+            if col not in set(columns):
                 diff.append(col)
         raise InvalidDataFrame(f"Invalid DataFrame due to column error: {diff}")
     else:
@@ -45,9 +47,10 @@ def validate_portfolio_definition(
         if "currency" not in opts.keys():
             raise InvalidPortfolioDefinition(f"currency definition missing from {code}")
         if opts["currency"] not in currencies:
-            raise InvalidPortfolioDefinition(f"{opts['currency']} not permitted")
+            raise InvalidCurrencyException(f"{opts['currency']} not permitted")
         weights.append(opts["weight"])
-    weights = sum(weights)
-    if weights != 1:
-        raise InvalidPortfolioDefinition(f"total weights of {weights} should be 1")
+    total_weight = np.sum(weights)
+    # floating point precsion + rounding means that sometimes this is not 1 exactly
+    if not math.isclose(total_weight, 1):
+        raise InvalidPortfolioDefinition(f"total weights of {total_weight} should be 1")
     return True

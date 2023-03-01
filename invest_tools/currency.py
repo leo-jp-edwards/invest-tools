@@ -7,5 +7,5 @@ class Currency(Enum):
 
 
 class InvalidCurrencyException(Exception):
-    "Raised when the currency input is invalid"
-    pass
+    def __init__(self, message) -> None:
+        super().__init__(message)
