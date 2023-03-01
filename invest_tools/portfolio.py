@@ -12,8 +12,8 @@ class Currency(Enum):
 
 
 class InvalidCurrencyException(Exception):
-    def __init__(self, message):
-        super().__init__("Currency must be `gbp` or `usd`")
+    "Raised when the currency input is invalid"
+    pass
 
 
 class Portfolio:
