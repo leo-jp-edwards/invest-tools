@@ -1,4 +1,5 @@
-from invest_tools.portfolio import Currency, Portfolio
+from invest_tools.currency import Currency
+from invest_tools.portfolio import Portfolio
 
 
 def test_portfolio_ping(portfolio_definition):

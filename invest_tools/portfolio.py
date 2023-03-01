@@ -1,19 +1,8 @@
 import typing
-from enum import Enum
 
 import pandas as pd
 
-from invest_tools import analysis, validation
-
-
-class Currency(Enum):
-    USD = "usd"
-    GBP = "gbp"
-
-
-class InvalidCurrencyException(Exception):
-    "Raised when the currency input is invalid"
-    pass
+from invest_tools import analysis, currency, validation
 
 
 class Portfolio:
@@ -32,7 +21,7 @@ class Portfolio:
     def __init__(
         self,
         portfolio_definition: typing.Dict[str, typing.Dict[str, str]],
-        currency: Currency,
+        currency: currency.Currency,
     ):
         """
         The portfolio definition must be a python dictionary with the form of:
@@ -78,17 +67,17 @@ class Portfolio:
         for code, opts in self.portfolio_definition.items():
             weights.append(opts["weight"])
             if opts["currency"] != self.currency:
-                if opts["currency"] != Currency.GBP:
+                if opts["currency"] != currency.Currency.GBP:
                     ret = self.calculate_returns(
                         self.prices, code, convert=True, cur=self.gbpusd
                     )
-                elif opts["currency"] != Currency.USD:
+                elif opts["currency"] != currency.Currency.USD:
                     ret = self.calculate_returns(
                         self.prices, code, convert=True, cur=self.usdgbp
                     )
                 else:
                     # TODO add a test for this!
-                    raise InvalidCurrencyException
+                    raise currency.InvalidCurrencyException
             else:
                 ret = self.calculate_returns(
                     self.prices, code, convert=False, cur=self.gbpusd
