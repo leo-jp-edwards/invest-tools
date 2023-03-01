@@ -2,7 +2,7 @@ import typing
 
 import pandas as pd
 
-from invest_tools import analysis, currency, validation
+from invest_tools import analysis, currency, log, validation
 
 
 class Portfolio:
@@ -53,6 +53,7 @@ class Portfolio:
         self.analysis = {}
 
     def ping(self):
+        log.logger.info("PING")
         return "pong"
 
     def build(self) -> pd.DataFrame:
