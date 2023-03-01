@@ -22,11 +22,9 @@ def plot_histogram(
     plt.show()
 
 
-def plot_heatmap(
-    correlation_matrix: pd.DataFrame, plot_title: str, save: bool = False
-) -> None:
+def plot_heatmap(matrix: pd.DataFrame, plot_title: str, save: bool = False) -> None:
     sns.heatmap(
-        correlation_matrix,
+        matrix,
         annot=True,
         cmap="YlGnBu",
         linewidth=0.3,

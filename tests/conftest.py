@@ -1,3 +1,4 @@
+import pandas as pd
 import pytest
 
 
@@ -17,3 +18,10 @@ def portfolio_definition():
         "TEST": {"weight": 1, "currency": "usd"},
     }
     return portfolio_definition
+
+
+@pytest.fixture()
+def clean_returns():
+    df = pd.read_csv("tests/test_files/test_returns.csv")
+    df.returns.dropna(inplace=True)
+    return df.returns
