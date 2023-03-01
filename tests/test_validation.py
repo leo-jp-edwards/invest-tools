@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from invest_tools import validation
+from invest_tools import currency, validation
 
 
 def test_validate_columns_valid(prices):
@@ -70,21 +70,23 @@ def test_validate_datatypes_invalid(invalid_prices):
         "Low": float,
         "Close": float,
         "Volume": float,
+        "Adjustment": float,
     }
     with pytest.raises(validation.InvalidDataFrame):
         validation.validate_columns(df, datatypes)
 
 
 @pytest.mark.parametrize(
-    "definition,expected",
+    "definition,valid,exception",
     [
-        ({"EG": {"weight": 1, "currency": "gbp"}}, True),
+        ({"EG": {"weight": 1, "currency": "gbp"}}, True, None),
         (
             {
                 "EG": {"weight": 0.9, "currency": "gbp"},
                 "EG2": {"weight": 1, "currency": "gbp"},
             },
             False,
+            validation.InvalidPortfolioDefinition,
         ),
         (
             {
@@ -92,29 +94,24 @@ def test_validate_datatypes_invalid(invalid_prices):
                 "EG2": {"weight": 0.1, "currency": "gbp"},
             },
             False,
+            currency.InvalidCurrencyException,
         ),
-        (
-            {"EG": {"weight": 1}},
-            False,
-        ),
-        (
-            {"EG": {"currency": "gbp"}},
-            False,
-        ),
+        ({"EG": {"weight": 1}}, False, validation.InvalidPortfolioDefinition),
+        ({"EG": {"currency": "gbp"}}, False, validation.InvalidPortfolioDefinition),
     ],
 )
-def test_validate_portfolio_definition(definition, expected):
+def test_validate_portfolio_definition(definition, valid, exception):
     """
     GIVEN an invalid portfolio definition
     WHEN validation.validat_portfolio_definition
     THEN it will raise and exception
     """
-    if expected:
+    if valid:
         try:
             valid = validation.validate_portfolio_definition(definition)
             assert valid
         except validation.InvalidPortfolioDefinition:
             pytest.fail("Should not raise InvalidPortfolioDefinition")
     else:
-        with pytest.raises(validation.InvalidPortfolioDefinition):
+        with pytest.raises(exception):
             validation.validate_portfolio_definition(definition)
