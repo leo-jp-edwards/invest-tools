@@ -3,7 +3,7 @@ from enum import Enum
 
 import pandas as pd
 
-from invest_tools import analysis
+from invest_tools import analysis, validation
 
 
 class Currency(Enum):
@@ -165,6 +165,8 @@ class Portfolio:
         adjustment and converted to currency
         """
         ti = prices.loc[prices.TIDM == code]
+        if len(ti) < 1:
+            raise validation.InvalidDataFrame(f"{code} not in prices df")
         ti = ti.sort_values(by="Date")
         ti = ti.set_index("Date")
         if convert:
