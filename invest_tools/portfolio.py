@@ -3,6 +3,8 @@ from enum import Enum
 
 import pandas as pd
 
+from invest_tools import analysis
+
 
 class Currency(Enum):
     USD = "usd"
@@ -58,6 +60,8 @@ class Portfolio:
         self.usdgbp = pd.DataFrame()
         self.currency = currency
         self.clean_returns = pd.Series()
+        self.percentage_returns = pd.Series()
+        self.analysis = {}
 
     def ping(self):
         return "pong"
@@ -183,3 +187,26 @@ class Portfolio:
         ti["Returns"] = ti.Close.pct_change()
         ti["Returns"] = ti["Returns"].dropna()
         return ti
+
+    def analyse(self) -> typing.Dict[str, float]:
+        analysis_results = {}
+
+        daily_returns = analysis.calculate_mean_daily_returns(self.clean_returns)
+        annual_returns = analysis.calculate_mean_annual_return(self.clean_returns)
+        daily_std = analysis.calculate_std_daily(self.clean_returns)
+        daily_var = analysis.calculate_variance_daily(self.clean_returns)
+        skew = analysis.calculate_skewness(self.clean_returns)
+        kurtosis = analysis.calculate_kurtosis(self.clean_returns)
+        percentage_returns = analysis.calculate_percentage_returns(self.clean_returns)
+
+        analysis_results["daily_returns"] = daily_returns
+        analysis_results["annual_returns"] = annual_returns
+        analysis_results["daily_std"] = daily_std
+        analysis_results["daily_var"] = daily_var
+        analysis_results["skew"] = skew
+        analysis_results["kurtosis"] = kurtosis
+
+        self.analysis = analysis_results
+        self.percentage_returns = percentage_returns
+
+        return analysis_results
