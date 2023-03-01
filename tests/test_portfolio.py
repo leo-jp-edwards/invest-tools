@@ -65,3 +65,26 @@ def test_portfolio_build(portfolio_definition, currency, prices):
     port.get_prices(prices)
     port.build()
     assert len(port.backtest) > 0
+
+
+def test_portfolio_analyse(portfolio_definition, currency, prices):
+    """
+    GIVEN a portfolio that has already been built
+    WHEN portfolio.analyse is called
+    THEN an analysis attribute is calculated
+    """
+    cur = Currency.GBP
+    port = Portfolio(portfolio_definition, cur)
+    port.get_usd_converter(currency)
+    port.get_prices(prices)
+    port.build()
+    port.analyse()
+
+    assert "daily_returns" in port.analysis
+    assert "annual_returns" in port.analysis
+    assert "daily_std" in port.analysis
+    assert "daily_var" in port.analysis
+    assert "skew" in port.analysis
+    assert "kurtosis" in port.analysis
+
+    assert len(port.percentage_returns) > 0

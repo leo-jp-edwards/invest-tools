@@ -59,8 +59,8 @@ class Portfolio:
         self.gbpusd = pd.DataFrame()
         self.usdgbp = pd.DataFrame()
         self.currency = currency
-        self.clean_returns = pd.Series()
-        self.percentage_returns = pd.Series()
+        self.clean_returns = pd.Series(dtype=float)
+        self.percentage_returns = pd.Series(dtype=float)
         self.analysis = {}
 
     def ping(self):
@@ -102,20 +102,6 @@ class Portfolio:
         self.clean_returns = port_ret.dropna()
         return port
 
-    def _get_data(self) -> typing.List[pd.DataFrame]:
-        """
-        Automatically get the data necessary for the portfolio builder
-
-        - FamaFrench Data
-        - Currency Data
-        - Benchmark
-
-        This data can also just be stored in a `data` directory at the same
-        level as the file that calls this package.
-        """
-
-        return []
-
     def get_prices(self, prices_csv: str) -> pd.DataFrame:
         """
         Take in a string pointing to a csv file containing the prices
@@ -135,6 +121,7 @@ class Portfolio:
         self.prices = df
         return df
 
+    # TODO make this generic for currency
     def get_usd_converter(self, conversion_csv: str) -> pd.DataFrame:
         """
         Get a dataframe of USD to GBP to convert the prices between currencies.

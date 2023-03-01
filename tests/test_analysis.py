@@ -85,5 +85,5 @@ def test_percentage_returns(clean_returns):
     THEN it returns the answer
     """
     pct = analysis.calculate_percentage_returns(clean_returns)
-    true_pct = pd.Series([0.1, 0.2, 0.3, 0.4, 0.5], name="returns")
+    true_pct = pd.Series([0.1, 0.2, 0.3, 0.4, 0.5], name="returns", dtype=float)
     tm.assert_series_equal(pct, true_pct)
