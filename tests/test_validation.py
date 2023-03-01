@@ -70,7 +70,6 @@ def test_validate_datatypes_invalid(invalid_prices):
         "Low": float,
         "Close": float,
         "Volume": float,
-        "Adjustment": float,
     }
     with pytest.raises(validation.InvalidDataFrame):
         validation.validate_columns(df, datatypes)
@@ -92,6 +91,14 @@ def test_validate_datatypes_invalid(invalid_prices):
                 "EG": {"weight": 0.9, "currency": "eur"},
                 "EG2": {"weight": 0.1, "currency": "gbp"},
             },
+            False,
+        ),
+        (
+            {"EG": {"weight": 1}},
+            False,
+        ),
+        (
+            {"EG": {"currency": "gbp"}},
             False,
         ),
     ],
