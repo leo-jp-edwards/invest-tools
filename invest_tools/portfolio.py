@@ -2,7 +2,7 @@ import typing
 
 import pandas as pd
 
-from invest_tools import analysis, currency, validation
+from invest_tools import analysis, currency, plot, validation
 from invest_tools.log import logger
 
 PRICES_DATATYPES = {
@@ -220,3 +220,16 @@ class Portfolio:
 
         logger.info("Analysis loaded")
         return analysis_results
+
+    def plot_correlation_heatmap(self) -> None:
+        if len(self.backtest) < 1:
+            logger.warn("please run `.build()` before plotting")
+        stock_returns = self.backtest.drop("portfolio_returns", axis=1)
+        correlation_matrix = stock_returns.corr()
+        logger.info("calculating portfolio correlation")
+        plot.plot_heatmap(correlation_matrix, "Portfolio Correlation")
+
+    def plot_returns_data(self) -> None:
+        if len(self.backtest) < 1:
+            logger.warn("please run `.build()` before plotting")
+        plot.plot_histogram(self.clean_returns, self.percentage_returns, "Returns data")

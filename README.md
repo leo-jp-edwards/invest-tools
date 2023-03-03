@@ -69,7 +69,10 @@ port = portfolio.Portfolio(portfolio_definition, portfolio.Currency.GBP)
 port.get_usd_converter("path/to/csv")
 port.get_prices("path/to/csv")
 port.build()
-print(np.mean(port.backtest.portfolio_returns))
+port.analyse()
+print(port.analysis)
+port.plot_correlation_heatmap()
+port.plot_returns_data()
 ```
 
 ## Roadmap
@@ -84,6 +87,7 @@ print(np.mean(port.backtest.portfolio_returns))
     - [ ] Calculate Moments
 - [ ] Add further testing
 - [ ] Make the package more generic
+- [ ] Investigate using [Polars](https://www.pola.rs/)
 
 ## License
 

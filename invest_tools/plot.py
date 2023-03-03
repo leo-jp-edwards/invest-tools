@@ -31,7 +31,7 @@ def plot_heatmap(matrix: pd.DataFrame, plot_title: str, save: bool = False) -> N
         annot_kws={"size": 9},
     )
     plt.xticks(rotation=90)
-    plt.yticks(roations=0)
+    plt.yticks(rotation=0)
     if save:
         plt.savefig(plot_title)
     plt.show()
