@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
+plt.style.use("fivethirtyeight")
+
 
 def plot_histogram(
     returns: pd.Series,
@@ -34,4 +36,11 @@ def plot_heatmap(matrix: pd.DataFrame, plot_title: str, save: bool = False) -> N
     plt.yticks(rotation=0)
     if save:
         plt.savefig(plot_title)
+    plt.show()
+
+
+def plot_excess_returns(
+    cumulative_returns: pd.DataFrame, plot_title: str, save: bool = False
+) -> None:
+    cumulative_returns.plot()
     plt.show()

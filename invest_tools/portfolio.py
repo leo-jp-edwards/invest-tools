@@ -16,6 +16,16 @@ PRICES_DATATYPES = {
     "Adjustment": float,
 }
 
+BENCHMARK_DATATYPES = {
+    "Date": "string",
+    "Open": float,
+    "High": float,
+    "Low": float,
+    "Close": float,
+    "Volume": float,
+    "Adjustment": float,
+}
+
 CURRENCY_DATATYPES = {
     "Date": "string",
     "Open": float,
@@ -71,6 +81,7 @@ class Portfolio:
         self.prices = pd.DataFrame()
         self.gbpusd = pd.DataFrame()
         self.usdgbp = pd.DataFrame()
+        self.benchmark = pd.DataFrame()
         self.currency = currency
         self.clean_returns = pd.Series(dtype=float)
         self.percentage_returns = pd.Series(dtype=float)
@@ -135,6 +146,33 @@ class Portfolio:
         logger.debug(f"passed validation: {valid}")
         df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
         self.prices = df
+        return df
+
+    def get_benchmark(self, benchmark_csv: str) -> pd.Series:
+        """
+        Take in a string pointing to a csv file containing an appropriate benchmark
+
+        The CSV should be in the following format:
+
+        | Date | Open | High | Low | Close | Volume | Adjustment |
+        |------|------|------|-----|-------|--------|------------|
+
+        The Date column should be in the format of "%d/%m/%Y".
+
+        :returns: Pandas dataframe of the portfolio benchmark
+        :rtype: pd.DataFrame
+        """
+        logger.info(f"Loading data from {benchmark_csv}")
+        df = pd.read_csv(benchmark_csv)
+        valid = validation.validate_columns(df, BENCHMARK_DATATYPES.keys())
+        valid = validation.validate_datatypes(df, BENCHMARK_DATATYPES)
+        logger.debug(f"passed validation: {valid}")
+        df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y")
+        df["returns"] = (df.Close / 100).pct_change()
+        df["benchmark_returns"] = df.returns.dropna()
+        df = df.set_index("Date")
+        df = df[["benchmark_returns"]]
+        self.backtest = self.backtest.join(df)
         return df
 
     # TODO make this generic for currency
@@ -220,6 +258,19 @@ class Portfolio:
 
         logger.info("Analysis loaded")
         return analysis_results
+
+    def benchmark_analysis(self) -> pd.DataFrame:
+        cumulative_returns = self.backtest[["portfolio_returns", "benchmark_returns"]]
+        cumulative_returns = cumulative_returns.assign(
+            excess_returns=cumulative_returns.portfolio_returns
+            - cumulative_returns.benchmark_returns
+        )
+        cumulative_returns = (
+            1 + cumulative_returns[["portfolio_returns", "excess_returns"]]
+        ).cumprod() - 1
+        plot.plot_excess_returns(cumulative_returns, "Portfolio Returns")
+        self.benchmark = cumulative_returns
+        return cumulative_returns
 
     def plot_correlation_heatmap(self) -> None:
         if len(self.backtest) < 1:

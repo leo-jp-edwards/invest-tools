@@ -18,6 +18,11 @@ def currency():
 
 
 @pytest.fixture()
+def benchmark():
+    return "tests/test_files/test_benchmark.csv"
+
+
+@pytest.fixture()
 def portfolio_definition():
     portfolio_definition = {
         "TEST": {"weight": 1, "currency": "usd"},

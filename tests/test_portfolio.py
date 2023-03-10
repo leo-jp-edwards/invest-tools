@@ -89,3 +89,23 @@ def test_portfolio_analyse(portfolio_definition, currency, prices):
     assert "kurtosis" in port.analysis
 
     assert len(port.percentage_returns) > 0
+
+
+def test_benchmark_analysis(portfolio_definition, currency, prices, benchmark):
+    """
+    GIVEN a portfolio that has already been built
+    WHEN portfolio.benchmark is called
+    THEN a benchmark attribute is calculated
+    """
+    cur = Currency.GBP
+    port = Portfolio(portfolio_definition, cur)
+    port.get_usd_converter(currency)
+    port.get_prices(prices)
+    port.build()
+    port.get_benchmark(benchmark)
+
+    assert "benchmark_returns" in port.backtest
+
+    port.benchmark_analysis()
+
+    assert len(port.backtest.benchmark) > 0

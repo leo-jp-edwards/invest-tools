@@ -40,10 +40,6 @@ The path strings to the csvs can be passed in.
 |------|------|------|-----|-------|-----------|--------|
 | 01/01/2023 | 1 | 1 | 1 | 1 | 1 | 1 |
 
-3. Fama French Data as a CSV
-
-This can be found [here](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html)
-
 ## Example
 
 Build a portfolio of two securities called `EG` and `EG2` with the weighting split 50:50 between the two. One is denominated in GBP and one in USD.
@@ -88,6 +84,7 @@ port.plot_returns_data()
 - [ ] Add further testing
 - [ ] Make the package more generic
 - [ ] Investigate using [Polars](https://www.pola.rs/)
+- [ ] Add func to calculate number of shares to buy to achieve portfolio make up (need to take in cash total for portfolio)
 
 ## License
 
