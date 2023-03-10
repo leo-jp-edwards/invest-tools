@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "invest-tools"
-version = "0.2.4"
+version = "0.2.5"
 description = "Tools to manage portfolio risk analysis"
 authors = ["leo <leojpedwards@gmail.com>"]
 readme = "README.md"
