@@ -75,6 +75,7 @@ port.plot_returns_data()
 
 - [x] Add an input validator
 - [x] Add logging
+- [ ] Update risk free calculation to use new data outputs
 - [ ] Add deeper analysis methods
     - [ ] Coppock Curve
     - [ ] Fama French
