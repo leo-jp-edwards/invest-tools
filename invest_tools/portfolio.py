@@ -268,7 +268,6 @@ class Portfolio:
         cumulative_returns = (
             1 + cumulative_returns[["portfolio_returns", "excess_returns"]]
         ).cumprod() - 1
-        plot.plot_excess_returns(cumulative_returns, "Portfolio Returns")
         self.benchmark = cumulative_returns
         return cumulative_returns
 
@@ -284,3 +283,8 @@ class Portfolio:
         if len(self.backtest) < 1:
             logger.warn("please run `.build()` before plotting")
         plot.plot_histogram(self.clean_returns, self.percentage_returns, "Returns data")
+
+    def plot_benchmark(self) -> None:
+        if len(self.benchmark) < 1:
+            logger.warn("please run `.benchmark_analysis()` before plotting")
+        plot.plot_excess_returns(self.benchmark, "Portfolio Returns")

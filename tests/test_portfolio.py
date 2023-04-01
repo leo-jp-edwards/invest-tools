@@ -108,4 +108,4 @@ def test_benchmark_analysis(portfolio_definition, currency, prices, benchmark):
 
     port.benchmark_analysis()
 
-    assert len(port.backtest.benchmark) > 0
+    assert len(port.benchmark) > 0
