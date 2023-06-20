@@ -130,5 +130,6 @@ dmypy.json
 
 # Editor
 .vscode
+.idea
 
-example.py
+example
