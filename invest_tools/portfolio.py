@@ -271,20 +271,22 @@ class Portfolio:
         self.benchmark = cumulative_returns
         return cumulative_returns
 
-    def plot_correlation_heatmap(self) -> None:
+    def plot_correlation_heatmap(self, save=False) -> None:
         if len(self.backtest) < 1:
             logger.warn("please run `.build()` before plotting")
         stock_returns = self.backtest.drop("portfolio_returns", axis=1)
         correlation_matrix = stock_returns.corr()
         logger.info("calculating portfolio correlation")
-        plot.plot_heatmap(correlation_matrix, "Portfolio Correlation")
+        plot.plot_heatmap(correlation_matrix, "Portfolio Correlation", save)
 
-    def plot_returns_data(self) -> None:
+    def plot_returns_data(self, save=False) -> None:
         if len(self.backtest) < 1:
             logger.warn("please run `.build()` before plotting")
-        plot.plot_histogram(self.clean_returns, self.percentage_returns, "Returns data")
+        plot.plot_histogram(
+            self.clean_returns, self.percentage_returns, "Returns data", save
+        )
 
-    def plot_benchmark(self) -> None:
+    def plot_benchmark(self, save=False) -> None:
         if len(self.benchmark) < 1:
             logger.warn("please run `.benchmark_analysis()` before plotting")
-        plot.plot_excess_returns(self.benchmark, "Portfolio Returns")
+        plot.plot_excess_returns(self.benchmark, "Portfolio Returns", save)
