@@ -24,7 +24,7 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Bump version
         run: |
-          poetry version minor
+          poetry version patch
       - name: Publish
         env: 
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
