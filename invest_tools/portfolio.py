@@ -274,7 +274,9 @@ class Portfolio:
     def plot_correlation_heatmap(self, save=False) -> None:
         if len(self.backtest) < 1:
             logger.warn("please run `.build()` before plotting")
-        stock_returns = self.backtest.drop("portfolio_returns", axis=1)
+        stock_returns = self.backtest.drop(
+            columns=["portfolio_returns", "benchmark_returns"]
+        )
         correlation_matrix = stock_returns.corr()
         logger.info("calculating portfolio correlation")
         plot.plot_heatmap(correlation_matrix, "Portfolio Correlation", save)
