@@ -1,4 +1,5 @@
 import typing
+from datetime import datetime, timedelta
 
 import pandas as pd
 
@@ -261,6 +262,9 @@ class Portfolio:
 
     def benchmark_analysis(self) -> pd.DataFrame:
         cumulative_returns = self.backtest[["portfolio_returns", "benchmark_returns"]]
+        cumulative_returns = cumulative_returns.loc[
+            datetime.now() - timedelta(days=365) : datetime.now().strftime("%Y-%m-%d")
+        ]
         cumulative_returns = cumulative_returns.assign(
             excess_returns=cumulative_returns.portfolio_returns
             - cumulative_returns.benchmark_returns
