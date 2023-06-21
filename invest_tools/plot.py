@@ -43,4 +43,7 @@ def plot_excess_returns(
     cumulative_returns: pd.DataFrame, plot_title: str, save: bool = False
 ) -> None:
     cumulative_returns.plot()
+    plt.xlabel("Cumulative Returns")
+    if save:
+        plt.savefig(plot_title)
     plt.show()
