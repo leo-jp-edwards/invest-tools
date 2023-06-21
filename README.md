@@ -75,7 +75,8 @@ port.plot_returns_data()
 
 - [x] Add an input validator
 - [x] Add logging
-- [ ] Update risk free calculation to use new data outputs
+- [x] Update risk free calculation to use new data outputs
+- [ ] Change benchmark analysis to only include past year to avoid screwy excess calculations
 - [ ] Add deeper analysis methods
     - [ ] Coppock Curve
     - [ ] Fama French
