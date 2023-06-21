@@ -263,7 +263,7 @@ class Portfolio:
     def benchmark_analysis(self) -> pd.DataFrame:
         cumulative_returns = self.backtest[["portfolio_returns", "benchmark_returns"]]
         cumulative_returns = cumulative_returns.loc[
-            datetime.now() - timedelta(days=365) : datetime.now().strftime("%Y-%m-%d")
+            datetime.now() - timedelta(days=365) : datetime.now()
         ]
         cumulative_returns = cumulative_returns.assign(
             excess_returns=cumulative_returns.portfolio_returns
