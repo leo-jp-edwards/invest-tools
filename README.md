@@ -71,23 +71,6 @@ port.plot_correlation_heatmap()
 port.plot_returns_data()
 ```
 
-## Roadmap
-
-- [x] Add an input validator
-- [x] Add logging
-- [x] Update risk free calculation to use new data outputs
-- [ ] Change benchmark analysis to only include past year to avoid screwy excess calculations
-- [ ] Add deeper analysis methods
-    - [ ] Coppock Curve
-    - [ ] Fama French
-    - [ ] Excess Returns
-    - [ ] Maximum Drawdown
-    - [ ] Calculate Moments
-- [ ] Add further testing
-- [ ] Make the package more generic
-- [ ] Investigate using [Polars](https://www.pola.rs/)
-- [ ] Add func to calculate number of shares to buy to achieve portfolio make up (need to take in cash total for portfolio)
-
 ## License
 
 [MIT](LICENSE)
