@@ -245,7 +245,9 @@ class Portfolio:
         daily_var = analysis.calculate_variance_daily(self.clean_returns)
         skew = analysis.calculate_skewness(self.clean_returns)
         kurtosis = analysis.calculate_kurtosis(self.clean_returns)
-        percentage_returns = analysis.calculate_percentage_returns(self.clean_returns)
+        cov_beta = analysis.calculate_beta_cov(self.backtest)
+        capm_beta = analysis.calculate_beta_capm(self.backtest)
+        max_drawdown = analysis.calculate_max_drawdown(self.clean_returns)
 
         analysis_results["daily_returns"] = daily_returns
         analysis_results["annual_returns"] = annual_returns
@@ -253,11 +255,13 @@ class Portfolio:
         analysis_results["daily_var"] = daily_var
         analysis_results["skew"] = skew
         analysis_results["kurtosis"] = kurtosis
-
-        self.analysis = analysis_results
-        self.percentage_returns = percentage_returns
+        analysis_results["beta_covariance"] = cov_beta
+        analysis_results["beta_capm"] = capm_beta
+        analysis_results["max_drawdown"] = max_drawdown
 
         logger.info("Analysis loaded")
+        logger.info(f"Analysis results: {analysis_results}")
+        self.analysis = analysis_results
         return analysis_results
 
     def benchmark_analysis(self) -> pd.DataFrame:
