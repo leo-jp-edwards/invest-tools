@@ -68,7 +68,7 @@ def test_portfolio_build(portfolio_definition, currency, prices):
     assert len(port.backtest) > 0
 
 
-def test_portfolio_analyse(portfolio_definition, currency, prices):
+def test_portfolio_analyse(portfolio_definition, currency, prices, benchmark):
     """
     GIVEN a portfolio that has already been built
     WHEN portfolio.analyse is called
@@ -79,6 +79,8 @@ def test_portfolio_analyse(portfolio_definition, currency, prices):
     port.get_usd_converter(currency)
     port.get_prices(prices)
     port.build()
+    port.get_benchmark(benchmark)
+    port.benchmark_analysis()
     port.analyse()
 
     assert "daily_returns" in port.analysis

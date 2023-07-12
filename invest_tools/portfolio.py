@@ -262,6 +262,9 @@ class Portfolio:
         logger.info("Analysis loaded")
         logger.info(f"Analysis results: {analysis_results}")
         self.analysis = analysis_results
+        self.percentage_returns = analysis.calculate_percentage_returns(
+            self.clean_returns
+        )
         return analysis_results
 
     def benchmark_analysis(self) -> pd.DataFrame:
