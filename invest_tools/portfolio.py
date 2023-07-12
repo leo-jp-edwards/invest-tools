@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import pandas as pd
 
-from invest_tools import analysis, currency, plot, validation
+from invest_tools import analysis, currency, plot, report, validation
 from invest_tools.log import logger
 
 PRICES_DATATYPES = {
@@ -262,6 +262,9 @@ class Portfolio:
         logger.info("Analysis loaded")
         logger.info(f"Analysis results: {analysis_results}")
         self.analysis = analysis_results
+        self.percentage_returns = analysis.calculate_percentage_returns(
+            self.clean_returns
+        )
         return analysis_results
 
     def benchmark_analysis(self) -> pd.DataFrame:
@@ -279,7 +282,7 @@ class Portfolio:
         self.benchmark = cumulative_returns
         return cumulative_returns
 
-    def plot_correlation_heatmap(self, save=False) -> None:
+    def plot_correlation_heatmap(self, save=False, save_location: str = None) -> None:
         if len(self.backtest) < 1:
             logger.warn("please run `.build()` before plotting")
         stock_returns = self.backtest.drop(
@@ -287,16 +290,64 @@ class Portfolio:
         )
         correlation_matrix = stock_returns.corr()
         logger.info("calculating portfolio correlation")
-        plot.plot_heatmap(correlation_matrix, "Portfolio Correlation", save)
+        plot.plot_heatmap(
+            correlation_matrix, "Portfolio Correlation", save, save_location
+        )
 
-    def plot_returns_data(self, save=False) -> None:
+    def plot_returns_data(self, save=False, save_location: str = None) -> None:
         if len(self.backtest) < 1:
             logger.warn("please run `.build()` before plotting")
         plot.plot_histogram(
-            self.clean_returns, self.percentage_returns, "Returns data", save
+            self.clean_returns,
+            self.percentage_returns,
+            "Returns data",
+            save,
+            save_location,
         )
 
-    def plot_benchmark(self, save=False) -> None:
+    def plot_benchmark(self, save=False, save_location: str = None) -> None:
         if len(self.benchmark) < 1:
             logger.warn("please run `.benchmark_analysis()` before plotting")
-        plot.plot_excess_returns(self.benchmark, "Portfolio Returns", save)
+        plot.plot_excess_returns(
+            self.benchmark, "Portfolio Returns", save, save_location
+        )
+
+    def build_report(self, save_location: str) -> None:
+        logger.info("Building plots")
+        self.plot_correlation_heatmap(save=True, save_location="example/data")
+        self.plot_returns_data(save=True, save_location="example/data")
+        self.plot_benchmark(save=True, save_location="example/data")
+        logger.info("Building report")
+        report_pdf = report.PDF()
+        report_pdf.add_page()
+        report_pdf.set_font("Arial", size=12)
+        report_pdf.ln(report.MARGIN)
+        report_pdf.table(self.analysis, ["Metric", "Value"])
+        report_pdf.image(
+            "example/data/Portfolio Correlation.png",
+            (report.PAGE_WIDTH / 2),
+            (report.MARGIN * 3),
+            100,
+            0,
+            type="PNG",
+        )
+        report_pdf.ln(report.CELL_HEIGHT)
+        report_pdf.image(
+            "example/data/Portfolio Returns.png",
+            report.MARGIN,
+            (report.PAGE_HEIGHT / 2),
+            80,
+            0,
+            type="PNG",
+        )
+        report_pdf.ln(report.CELL_HEIGHT)
+        report_pdf.image(
+            "example/data/Returns Data.png",
+            (report.PAGE_WIDTH / 2 + report.MARGIN),
+            (report.PAGE_HEIGHT / 2),
+            80,
+            0,
+            type="PNG",
+        )
+        report_pdf.ln(report.CELL_HEIGHT)
+        report_pdf.output(save_location)
